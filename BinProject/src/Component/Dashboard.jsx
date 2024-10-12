@@ -20,76 +20,78 @@ import TrashAlert from './Trashalert'; // นำเข้าคอมโพเ�
 function Dashboard() {
   const [trashLevel, setTrashLevel] = useState(0); // ระดับขยะเริ่มต้น
   const [alertVisible, setAlertVisible] = useState(false);
-  const [batteryLevel, setBatteryLevel] = useState(100);
+  const [batteryLevel, setBatteryLevel] = useState(0);
   const [SSIDBin, setSSIDBin] = useState("EXINNOT");
   const [StatusBin, setStatusBin] = useState("โหมดที่ 1 : เดินสุ่ม");
+  const [batterrydestroy, setBatterydestroy] = useState(0);
   
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTrashLevel((prevTrashLevel) => {
-        if (prevTrashLevel < 100) {
-          return prevTrashLevel + 10;
-        } else {
-          return 0; // รีเซ็ตกลับไปที่ 0 เมื่อถึง 100
-        }
-      });
-    }, 1000); // เพิ่มขึ้นทุกๆ 1 วินาที
-
-    // ล้างการทำงานของ interval เมื่อคอมโพเนนต์ถูกยกเลิก
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBatteryLevel((prevTrashLevel) => {
-        if (prevTrashLevel < 100) {
-          return prevTrashLevel + 10;
-        } else {
-          return 0; // รีเซ็ตกลับไปที่ 0 เมื่อถึง 100
-        }
-      });
-    }, 1000); // เพิ่มขึ้นทุกๆ 1 วินาที
-
-    // ล้างการทำงานของ interval เมื่อคอมโพเนนต์ถูกยกเลิก
-    return () => clearInterval(interval);
-  }, []);
-
-  // const fetchData = () => {
-  //   fetch('http://192.168.137.232:8000/getdatadb')
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok.');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(data => {
-  //       console.log(data);
-  //       setBatteryLevel(parseInt(data.Battery));
-  //       setTrashLevel(data.Trash);
-  //       setSSIDBin(data.SSID)
-  //       setStatusBin(data.Status)
-  //     })
-  //     .catch(error => {
-  //       console.error('Error', error);
-  //     });
-  // };
-
-  // useEffect(()=>{
-  //   fetchData();
-  //   const interval = setInterval(fetchData,20000);
-    
-  //   return ()=> clearInterval(interval);
-  // },[]);
-
   // useEffect(() => {
-  //   // ตรวจสอบระดับขยะและแสดงการแจ้งเตือนหากถึง 100%
-  //   if (trashLevel >= 100) {
-  //     setAlertVisible(true);
-  //   }
-  // }, [trashLevel]);
+  //   const interval = setInterval(() => {
+  //     setTrashLevel((prevTrashLevel) => {
+  //       if (prevTrashLevel < 100) {
+  //         return prevTrashLevel + 10;
+  //       } else {
+  //         return 0; // รีเซ็ตกลับไปที่ 0 เมื่อถึง 100
+  //       }
+  //     });
+  //   }, 1000); // เพิ่มขึ้นทุกๆ 1 วินาที
 
-  // const closeAlert = () => {
-  //   setAlertVisible(false);
-  // };
+    // ล้างการทำงานของ interval เมื่อคอมโพเนนต์ถูกยกเลิก
+  //   return () => clearInterval(interval);
+  // }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setBatteryLevel((prevTrashLevel) => {
+  //       if (prevTrashLevel < 100) {
+  //         return prevTrashLevel + 10;
+  //       } else {
+  //         return 0; // รีเซ็ตกลับไปที่ 0 เมื่อถึง 100
+  //       }
+  //     });
+  //   }, 1000); // เพิ่มขึ้นทุกๆ 1 วินาที
+
+    // ล้างการทำงานของ interval เมื่อคอมโพเนนต์ถูกยกเลิก
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  const fetchData = () => {
+    fetch('http://127.0.0.1:5000/api/getdata?page=Dashboard')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setBatteryLevel(data.Batterylevel);
+        setBatterydestroy(data.Batterydestroy);
+        setTrashLevel(data.Trashlevel);
+        setSSIDBin(data.Wifi)
+        setStatusBin(data.Status)
+      })
+      .catch(error => {
+        console.error('Error', error);
+      });
+  };
+
+  useEffect(()=>{
+    fetchData();
+    const interval = setInterval(fetchData,20000);
+    
+    return ()=> clearInterval(interval);
+  },[]);
+
+  useEffect(() => {
+    // ตรวจสอบระดับขยะและแสดงการแจ้งเตือนหากถึง 100%
+    if (trashLevel >= 100) {
+      setAlertVisible(true);
+    }
+  }, [trashLevel]);
+
+  const closeAlert = () => {
+    setAlertVisible(false);
+  };
 
   return (
     <>
@@ -142,7 +144,7 @@ function Dashboard() {
                 </div>
                 <div className='flex flex-col items-center '>
                   <span className='text-sm md:text-lg landscape-mobile:text-sm'>อัตราการเสื่อสภาพ</span>
-                  <span className='text-3xl md:text-5xl landscape-mobile:text-3xl portrait-desktop:text-4xl'>0%</span>
+                  <span className='text-3xl md:text-5xl landscape-mobile:text-3xl portrait-desktop:text-4xl'>{batterrydestroy}%</span>
                 </div>
               </div>
             </div>
