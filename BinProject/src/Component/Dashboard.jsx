@@ -15,16 +15,18 @@ import low from './Img/low.png';
 import middle from './Img/midiem.png';
 import Navbar from './Navbar';
 import Grapt from './Grapt';
-import TrashAlert from './Trashalert'; // นำเข้าคอมโพเนนต์ TrashAlert
+import TrashAlert from './Trashalert';
+import Loopalert from './Loopalert';
 
 function Dashboard() {
-  const [trashLevel, setTrashLevel] = useState(0); // ระดับขยะเริ่มต้น
+  const [trashLevel, setTrashLevel] = useState(0);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [batteryLevel, setBatteryLevel] = useState(0);
+  const [alertLoop,setAlertloop] = useState(true)
+  const [batteryLevel, setBatteryLevel] = useState();
   const [SSIDBin, setSSIDBin] = useState("EXINNOT");
-  const [StatusBin, setStatusBin] = useState("โหมดที่ 1 : เดินสุ่ม");
+  const [StatusBin, setStatusBin] = useState("Auto");
   const [batterrydestroy, setBatterydestroy] = useState(0);
-  
+
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setTrashLevel((prevTrashLevel) => {
@@ -54,48 +56,59 @@ function Dashboard() {
   //   return () => clearInterval(interval);
   // }, []);
 
-  const fetchData = () => {
-    fetch('http://127.0.0.1:5000/api/getdata?page=Dashboard')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok.');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
-        setBatteryLevel(data.Batterylevel);
-        setBatterydestroy(data.Batterydestroy);
-        setTrashLevel(data.Trashlevel);
-        setSSIDBin(data.Wifi)
-        setStatusBin(data.Status)
-      })
-      .catch(error => {
-        console.error('Error', error);
-      });
-  };
+  // const fetchData = () => {
+  //   fetch('http://'+window.location.href.split("http://")[1].split("/")[0]+':5000/api/getdata?page=Dashboard')
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok.');
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(data => {
+  //       console.log(data);
+  //       setBatteryLevel(data.Batterylevel);
+  //       setBatterydestroy(data.Batterydestroy);
+  //       setTrashLevel(data.Trashlevel);
+  //       setSSIDBin(data.Wifi)
+  //       setStatusBin(data.Status)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error', error);
+  //     });
+  // };
 
-  useEffect(()=>{
-    fetchData();
-    const interval = setInterval(fetchData,20000);
+  // useEffect(()=>{
+  //   fetchData();
+  //   const interval = setInterval(fetchData,20000);
     
-    return ()=> clearInterval(interval);
-  },[]);
+  //   return ()=> clearInterval(interval);
+  // },[]);
 
   useEffect(() => {
-    // ตรวจสอบระดับขยะและแสดงการแจ้งเตือนหากถึง 100%
     if (trashLevel >= 100) {
       setAlertVisible(true);
     }
   }, [trashLevel]);
 
+  useEffect(() => {
+    if (StatusBin === "Stuck") {
+      setAlertloop(true);
+    }
+  }, [StatusBin]);
+  
+
   const closeAlert = () => {
     setAlertVisible(false);
+  };
+
+  const closeAlertloop = () => {
+    setAlertloop(false);
   };
 
   return (
     <>
     {alertVisible && <TrashAlert onClose={closeAlert} />}
+    {alertLoop && <Loopalert onClose={closeAlertloop} />}
     <div className="relative flex flex-col lg:flex-row h-screen">
       <div className='fixed hidden lg:block lg:w-1/5 h-screen top-0 left-0 z-50'>
         <Sidebar />

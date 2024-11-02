@@ -9,7 +9,7 @@ function Setting() {
     const [savedData, setSavedData] = useState({ name: '', rangeValue: 30, rangeDistanceValue: 30 }); // เก็บข้อมูลที่บันทึก
 
     const fetchData = () => {
-        fetch('http://127.0.0.1:5000/api/getdata?page=Setting')
+        fetch('http://'+window.location.href.split("http://")[1].split("/")[0]+':5000/api/getdata?page=Setting')
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok.');
@@ -46,7 +46,7 @@ function Setting() {
             gohome : rangeValue,
             stopdistance : rangeDistanceValue
         }
-        fetch('http://127.0.0.1:5000/api/update', {
+        fetch('http://'+window.location.href.split("http://")[1].split("/")[0]+':5000/api/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

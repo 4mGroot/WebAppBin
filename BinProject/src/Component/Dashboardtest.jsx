@@ -23,7 +23,6 @@ function Dashboardtest() {
   const [SSIDBin, setSSIDBin] = useState(0);
   const [StatusBin, setStatusBin] = useState(0);
   const [batterrydestroy, setBatterydestroy] = useState(0);
-  
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setTrashLevel((prevTrashLevel) => {
@@ -53,33 +52,33 @@ function Dashboardtest() {
   //   return () => clearInterval(interval);
   // }, []);
 
-  const fetchData = () => {
-    fetch('http://127.0.0.1:5000/api/getdata?page=Dashboard')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok.');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
-        setBatteryLevel(data.Batterylevel);
-        setBatterydestroy(data.Batterydestroy);
-        setTrashLevel(data.Trashlevel);
-        setSSIDBin(data.Wifi)
-        setStatusBin(data.Status)
-      })
-      .catch(error => {
-        console.error('Error', error);
-      });
-  };
+  // const fetchData = () => {
+  //   fetch('http://127.0.0.1:5000/api/getdata?page=Dashboard')
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok.');
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(data => {
+  //       console.log(data);
+  //       setBatteryLevel(data.Batterylevel);
+  //       setBatterydestroy(data.Batterydestroy);
+  //       setTrashLevel(data.Trashlevel);
+  //       setSSIDBin(data.Wifi)
+  //       setStatusBin(data.Status)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error', error);
+  //     });
+  // };
 
-  useEffect(()=>{
-    fetchData();
+  // useEffect(()=>{
+  //   fetchData();
     // const interval = setInterval(fetchData,20000);
     
     // return ()=> clearInterval(interval);
-  },[]);
+  // },[]);
 
   // useEffect(() => {
   //   // ตรวจสอบระดับขยะและแสดงการแจ้งเตือนหากถึง 100%
